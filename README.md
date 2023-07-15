@@ -1,1 +1,1 @@
-This project was downloaded to try to written js-scripts.
+This project was downloaded to try to writing js-scripts.
