@@ -68,7 +68,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-const tabs = () => {};
+const tabs = (headerSelector, tabSelector, contentSelector, activeClass) => {
+  const header = document.querySelector(headerSelector),
+    tab = document.querySelectorAll(tabSelector),
+    content = document.querySelectorAll(contentSelector);
+  function hideTabContent() {
+    content.forEach(i => {
+      i.style.display = 'none';
+    });
+    tab.forEach(i => {
+      i.classList.remove(activeClass);
+    });
+  }
+  ;
+  function showTabContent() {
+    let elem = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    content[elem].style.display = 'block';
+    tab[elem].classList.add(activeClass);
+  }
+  ;
+  hideTabContent();
+  showTabContent();
+  header.addEventListener('click', e => {
+    const target = e.target;
+    if (target && (target.classList.contains(tabSelector.replace(/\./, "")) || target.parentNode.classList.contains(tabSelector.replace(/\./, "")))) {
+      tab.forEach((elem, numberElem) => {
+        if (target == elem || target.parentNode == elem) {
+          hideTabContent();
+          showTabContent(numberElem);
+        }
+      });
+    }
+  });
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (tabs);
 
 /***/ }),
@@ -13979,7 +14011,8 @@ __webpack_require__.r(__webpack_exports__);
 
 window.addEventListener("DOMContentLoaded", () => {
   (0,_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
+  (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
 });
 })();
 
