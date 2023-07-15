@@ -1,6 +1,68 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/js/modules/forms.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/forms.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const forms = () => {
+  const form = document.querySelectorAll('form'),
+    input = document.querySelectorAll('input'),
+    phoneNumber = document.querySelectorAll('input[name="user_phone"]');
+  phoneNumber.forEach(elem => {
+    elem.addEventListener('input', () => {
+      elem.value = elem.value.replace(/\D/, '');
+    });
+  });
+  const mess = {
+    loading: "Loading...",
+    done: "Thanks. We will be contact to you soon.",
+    fail: "Sorry, something wrong..."
+  };
+  const postData = async (url, data) => {
+    document.querySelector('.status').innerHTML = mess.loading;
+    let result = await fetch(url, {
+      method: "POST",
+      body: data
+    });
+    return await result.text();
+  };
+  const clearInput = () => {
+    input.forEach(elem => {
+      elem.value = '';
+    });
+  };
+  form.forEach(elem => {
+    elem.addEventListener('submit', event => {
+      event.preventDefault();
+      let messStatus = document.createElement('div');
+      messStatus.classList.add('status');
+      elem.appendChild(messStatus);
+      const formData = new FormData(elem);
+      postData('assets/server.php', formData).then(result => {
+        messStatus.textContent = mess.done;
+      }).catch(() => {
+        messStatus.textContent = mess.fail;
+      }).finally(() => {
+        clearInput();
+        setTimeout(() => {
+          messStatus.remove();
+        }, 3000);
+      });
+    });
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (forms);
+
+/***/ }),
+
 /***/ "./src/js/modules/modals.js":
 /*!**********************************!*\
   !*** ./src/js/modules/modals.js ***!
@@ -14006,13 +14068,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _slider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./slider */ "./src/js/slider.js");
 /* harmony import */ var _modules_modals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/modals */ "./src/js/modules/modals.js");
 /* harmony import */ var _modules_tabs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/tabs */ "./src/js/modules/tabs.js");
+/* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/forms */ "./src/js/modules/forms.js");
+
 
 
 
 window.addEventListener("DOMContentLoaded", () => {
+  "use strict";
+
   (0,_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
   (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
   (0,_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
+  (0,_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])();
 });
 })();
 
