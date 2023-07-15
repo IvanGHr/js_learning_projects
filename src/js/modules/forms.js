@@ -1,13 +1,10 @@
-const forms = () => {
-    const form = document.querySelectorAll('form'),
-          input = document.querySelectorAll('input'),
-          phoneNumber = document.querySelectorAll('input[name="user_phone"]');
+import checkNumInputs from './checkNumInputs';
 
-    phoneNumber.forEach(elem => {
-        elem.addEventListener('input', () => {
-            elem.value = elem.value.replace(/\D/, '');
-        });
-    });
+const forms = (state) => {
+    const form = document.querySelectorAll('form'),
+          input = document.querySelectorAll('input');
+
+    checkNumInputs('input[name="user_phone"]');
 
     const mess = {
         loading: "Loading...",
@@ -40,9 +37,15 @@ const forms = () => {
             elem.appendChild(messStatus);
 
             const formData = new FormData(elem);
+            if (elem.getAttribute('data-calc') === "end") {
+                for (let key in state) {
+                    formData.append(key, state[key]);
+                }
+            }
 
             postData('assets/server.php', formData)
                 .then(result => {
+                    console.log(result);
                     messStatus.textContent = mess.done;
                 })
                 .catch(() => {
