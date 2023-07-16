@@ -3,7 +3,7 @@ const images = () => {
           isSelector = document.querySelector('.works'),
           isImg = document.createElement('img');
     
-    popupImg.classList.add('popup');
+    popupImg.classList.add('popuping');
     isSelector.appendChild(popupImg);
 
     popupImg.style.justifyContent = 'center';
@@ -23,7 +23,7 @@ const images = () => {
             isImg.setAttribute('src', path);
         }
 
-        if (target && target.matches('div.popup')) {
+        if (target && target.matches('div.popuping')) {
             popupImg.style.display = 'none';
         }
     });
