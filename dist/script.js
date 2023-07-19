@@ -41,15 +41,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* import checkNumInputs from './checkNumInputs'; */
+/* harmony import */ var _services_requests__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/requests */ "./src/js/services/requests.js");
 
 const forms = () => {
   const form = document.querySelectorAll('form'),
     input = document.querySelectorAll('input'),
     upload = document.querySelectorAll('[name="upload"]');
-
-  /* checkNumInputs('input[name="user_phone"]'); */
-
   const mess = {
     loading: "Loading...",
     done: "Thanks. We will be contact to you soon.",
@@ -61,13 +58,6 @@ const forms = () => {
   const path = {
     designer: 'assets/server.php',
     question: 'assets/question.php'
-  };
-  const postData = async (url, data) => {
-    let result = await fetch(url, {
-      method: "POST",
-      body: data
-    });
-    return await result.text();
   };
   const clearInput = () => {
     input.forEach(elem => {
@@ -90,7 +80,7 @@ const forms = () => {
     elem.addEventListener('submit', event => {
       event.preventDefault();
       let messStatus = document.createElement('div');
-      messStatus.classList.add('status');
+      messStatus.style.textAlign = 'center';
       elem.parentNode.appendChild(messStatus);
       elem.classList.add('animated', 'fadeOutUp');
       setTimeout(() => {
@@ -109,7 +99,7 @@ const forms = () => {
       //Если форма содержит картинку, которую мы пытаемся отправить, то отправляется на сервер designer
       elem.closest('.popup-design') || elem.classList.contains('calc_form') ? api = path.designer : api = path.question;
       console.log(api);
-      postData(api, formData).then(result => {
+      (0,_services_requests__WEBPACK_IMPORTED_MODULE_0__.postData)(api, formData).then(result => {
         console.log(result);
         statusImg.setAttribute('src', mess.doneImg);
         textMess.textContent = mess.done;
@@ -296,19 +286,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-const showMoreStyles = (trigger, styles) => {
-  const cards = document.querySelectorAll(styles),
-    button = document.querySelector(trigger);
-  cards.forEach(card => {
-    card.classList.add('animated', 'fadeInUp');
-  });
-  button.addEventListener('click', () => {
-    cards.forEach(card => {
-      card.classList.remove('hidden-lg', 'hidden-md', 'hidden-sm', 'hidden-xs');
-      card.classList.add('col-sm-3', 'col-sm-offset-0', 'col-xs-10', 'col-xs-offset-1');
+/* harmony import */ var _services_requests__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../services/requests */ "./src/js/services/requests.js");
+
+const showMoreStyles = (trigger, wrapper) => {
+  const button = document.querySelector(trigger);
+  button.addEventListener('click', function () {
+    (0,_services_requests__WEBPACK_IMPORTED_MODULE_0__.getResource)('assets/db.json').then(res => {
+      createCards(res.styles);
+      this.remove();
+    }).catch(error => {
+      button.style.position = 'relative';
+      let messStatus = document.createElement('div');
+      messStatus.classList.add('status');
+      messStatus.textContent = 'Something wrong';
+      button.parentNode.appendChild(messStatus);
+      setTimeout(() => {
+        messStatus.remove();
+      }, 3000);
     });
-    button.remove();
   });
+  function createCards(response) {
+    response.forEach(_ref => {
+      let {
+        src,
+        title,
+        link
+      } = _ref;
+      let card = document.createElement('div');
+      card.classList.add('animated', 'fadeInUp', 'col-sm-3', 'col-sm-offset-0', 'col-xs-10', 'col-xs-offset-1');
+      card.innerHTML = `
+                <div class="styles-block">
+                    <img src=${src} alt="style">
+                    <h4>${title}</h4>
+                    <a href=${link}>Подробнее</a>
+                </div>
+            `;
+      document.querySelector(wrapper).appendChild(card);
+    });
+  }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (showMoreStyles);
 
@@ -383,6 +398,35 @@ const sliders = (selector, direction, prev, next) => {
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (sliders);
+
+/***/ }),
+
+/***/ "./src/js/services/requests.js":
+/*!*************************************!*\
+  !*** ./src/js/services/requests.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getResource: () => (/* binding */ getResource),
+/* harmony export */   postData: () => (/* binding */ postData)
+/* harmony export */ });
+const postData = async (url, data) => {
+  let result = await fetch(url, {
+    method: "POST",
+    body: data
+  });
+  return await result.text();
+};
+const getResource = async url => {
+  let result = await fetch(url);
+  if (!result.ok) {
+    throw new Error(`Could not fatch ${url}, status: ${result.status}`);
+  }
+  return await result.json();
+};
+
 
 /***/ })
 
@@ -471,7 +515,7 @@ window.addEventListener('DOMContentLoaded', () => {
   (0,_modules_mask__WEBPACK_IMPORTED_MODULE_3__["default"])('[name="phone"]');
   (0,_modules_checkTextInpust__WEBPACK_IMPORTED_MODULE_4__["default"])('[name="name"]');
   (0,_modules_checkTextInpust__WEBPACK_IMPORTED_MODULE_4__["default"])('[name="message"]');
-  (0,_modules_showMoreStyles__WEBPACK_IMPORTED_MODULE_5__["default"])('.button-styles', '.styles-2');
+  (0,_modules_showMoreStyles__WEBPACK_IMPORTED_MODULE_5__["default"])('.button-styles', '#styles .row');
 });
 })();
 

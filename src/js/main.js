@@ -15,5 +15,5 @@ window.addEventListener('DOMContentLoaded', () => {
     mask('[name="phone"]');
     checkTextInpust('[name="name"]');
     checkTextInpust('[name="message"]');
-    showMoreStyles('.button-styles', '.styles-2');
+    showMoreStyles('.button-styles', '#styles .row');
 });
