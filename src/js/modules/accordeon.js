@@ -21,24 +21,18 @@ const accordeon = (selector) => {
 
     //this script is removing active class when you click on the next block
     btns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            if (this.classList.contains('active-style')) {
-                this.classList.remove('active-style');
-                this.nextElementSibling.classList.remove('active-content');
-                this.nextElementSibling.style.maxHeight = '0px';
-            } else {
-                btns.forEach(otherBtn => {
-                    if (otherBtn !== this) {
-                        otherBtn.classList.remove('active-style');
-                        otherBtn.nextElementSibling.classList.remove('active-content');
-                        otherBtn.nextElementSibling.style.maxHeight = '0px';
-                    }
-                });
-    
+        btn.addEventListener('click', function() {  
+            if (!this.classList.contains('active-style')) {
                 this.classList.add('active-style');
                 this.nextElementSibling.classList.add('active-content');
                 this.nextElementSibling.style.maxHeight = this.nextElementSibling.scrollHeight + 80 + 'px';
             }
+
+            btns.forEach(btn => {
+                btn.classList.remove('active-style');
+                btn.nextElementSibling.classList.remove('active-content');
+                btn.nextElementSibling.style.maxHeight = '0px';
+            });
         });
     });
 };
