@@ -531,47 +531,82 @@ const scrolling = upSelector => {
       upElem.classList.remove('fadeIn');
     }
   });
-  const element = document.documentElement,
-    body = document.body;
-  const calcScroll = () => {
-    upElem.addEventListener('click', function (e) {
-      let scrollTop = Math.round(body.scrollTop || element.scrollTop);
-      if (this.hash !== '') {
-        e.preventDefault();
-        let hashElement = document.querySelector(this.hash),
-          hashElementTop = 0;
-        while (hashElement.offsetParent) {
-          hashElementTop += hashElement.offsetTop;
-          hashElement = hashElement.offsetParent;
+  let links = document.querySelectorAll('[href^="#"]'),
+    speed = 0.1;
+  links.forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      let widthTop = Math.round(document.documentElement.scrollTop),
+        hash = this.hash,
+        toBlock = document.querySelector(hash).getBoundingClientRect().top,
+        start = null;
+      requestAnimationFrame(step);
+      function step(time) {
+        if (start === null) {
+          start = time;
         }
-        hashElementTop = Math.round(hashElementTop);
-        smoothScroll(scrollTop, hashElementTop, this.hash);
+        let progress = time - start,
+          r = toBlock < 0 ? Math.max(widthTop - progress / speed, widthTop + toBlock) : Math.min(widthTop + progress / speed, widthTop + toBlock);
+        document.documentElement.scrollTo(0, r);
+        if (r != widthTop + toBlock) {
+          requestAnimationFrame(step);
+        } else {
+          location.hash = hash;
+        }
       }
     });
-  };
-  const smoothScroll = (from, to, hash) => {
-    let timeInterval = 1,
-      previouScrollTop,
-      speed;
-    if (to > from) {
-      speed = 30;
-    } else {
-      speed = -30;
-    }
-    let move = setInterval(function () {
-      let scrollTop = Math.round(body.scrollTop || element.scrollTop);
-      if (previouScrollTop === scrollTop || to > from && scrollTop >= to || to < from && scrollTop <= to) {
-        clearInterval(move);
-        history.replaceState(history.state, document.title, location.href.replace(/#.*$/g, '') + hash);
+  });
+
+  /* const element = document.documentElement,
+        body = document.body;
+    const calcScroll = () => {
+      upElem.addEventListener('click', function(e) {
+          let scrollTop = Math.round(body.scrollTop || element.scrollTop);
+            if (this.hash !== '') {
+              e.preventDefault();
+              let hashElement = document.querySelector(this.hash),
+                  hashElementTop = 0;
+              
+              while (hashElement.offsetParent) {
+                  hashElementTop += hashElement.offsetTop;
+                  hashElement = hashElement.offsetParent;
+              }
+                hashElementTop = Math.round(hashElementTop);
+              smoothScroll(scrollTop, hashElementTop, this.hash);
+          }
+      });
+  }
+    const smoothScroll = (from, to, hash) => {
+      let timeInterval = 1,
+          previouScrollTop,
+          speed;
+        if (to > from) {
+          speed = 30;
       } else {
-        body.scrollTop += speed;
-        element.scrollTop += speed;
-        previouScrollTop = scrollTop;
+          speed = -30;
       }
-    }, timeInterval);
+        let move = setInterval(function() {
+          let scrollTop = Math.round(body.scrollTop || element.scrollTop);
+            if (
+              previouScrollTop === scrollTop ||
+              (to > from && scrollTop >= to) ||
+              (to < from && scrollTop <= to)
+          ) {
+              clearInterval(move);
+              history.replaceState(
+                  history.state,
+                  document.title,
+                  location.href.replace(/#.*$/g, '') + hash);
+          } else {
+              body.scrollTop += speed;
+              element.scrollTop += speed;
+              previouScrollTop = scrollTop;
+          }
+      }, timeInterval);
   };
-  calcScroll();
+    calcScroll(); */
 };
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (scrolling);
 
 /***/ }),
