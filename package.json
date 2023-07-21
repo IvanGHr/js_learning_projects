@@ -1,5 +1,5 @@
 {
-  "name": "window",
+  "name": "loan",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -23,10 +23,6 @@
     "gulp": "^4.0.2",
     "webpack": "^5.88.1",
     "webpack-stream": "^7.0.0"
-  },
-  "dependencies": {
-    "jquery": "^3.7.0",
-    "slick-carousel": "^1.8.1"
   },
   "overrides": {
     "chokidar": "3.5.3",
